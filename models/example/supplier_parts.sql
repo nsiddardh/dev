@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 WITH supplier_parts AS (
   SELECT * 
     FROM snowflake_sample_data.tpch_sf1.supplier
