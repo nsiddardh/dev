@@ -1,27 +1,27 @@
-
-/*
-    Welcome to your first dbt model!
-    Did you know that you can also configure models directly within SQL files?
-    This will override configurations stated in dbt_project.yml
-
-    Try changing "table" to "view" below
-*/
-
 {{ config(materialized='table') }}
 
-with source_data as (
-
-    select 1 as id
-    union all
-    select null as id
-
+WITH supplier_parts AS (
+  SELECT * 
+    FROM snowflake_sample_data.tpch_sf1.supplier
+      JOIN snowflake_sample_data.tpch_sf1.partsupp
+      ON s_suppkey=ps_suppkey
+        JOIN snowflake_sample_data.tpch_sf1.part
+        ON ps_partkey=p_partkey
 )
 
-select *
-from source_data
-
-/*
-    Uncomment the line below to remove records with null `id` values
-*/
-
--- where id is not null
+SELECT
+s_suppkey AS supplier_key,
+s_name AS supplier_name,
+s_nationkey AS nation_key,
+s_acctbal AS account_balance,
+ps_availqty AS available_quantity,
+ps_supplycost AS supply_cost,
+p_partkey AS part_key,
+p_name AS part_name,
+p_mfgr AS part_manufacturer,
+p_brand AS part_brand,
+p_type AS part_type,
+p_size AS part_size,
+p_container AS part_container,
+p_retailprice AS part_retail_price
+  FROM supplier_parts
